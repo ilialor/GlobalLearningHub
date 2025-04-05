@@ -8,6 +8,7 @@ import enTranslation from '../locales/en.json';
 import esTranslation from '../locales/es.json';
 import frTranslation from '../locales/fr.json';
 import zhTranslation from '../locales/zh.json';
+import ruTranslation from '../locales/ru.json';
 
 // Define supported languages
 export const LANGUAGES = {
@@ -34,6 +35,12 @@ export const LANGUAGES = {
     name: 'Chinese',
     flag: 'https://cdn.countryflags.com/thumbs/china/flag-400.png',
     nativeName: '中文'
+  },
+  ru: {
+    code: 'ru',
+    name: 'Russian',
+    flag: 'https://cdn.countryflags.com/thumbs/russia/flag-400.png',
+    nativeName: 'Русский'
   }
 };
 
@@ -47,7 +54,8 @@ i18n
       en: { translation: enTranslation },
       es: { translation: esTranslation },
       fr: { translation: frTranslation },
-      zh: { translation: zhTranslation }
+      zh: { translation: zhTranslation },
+      ru: { translation: ruTranslation }
     },
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',

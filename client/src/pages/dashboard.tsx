@@ -14,19 +14,23 @@ const Dashboard = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   
   // Fetch user's current courses
-  const { data: currentCourses = [] } = useQuery({
+  const { data: currentCourses = [] } = useQuery<any[]>({
     queryKey: ['/api/user/courses'],
     enabled: !!user
   });
   
   // Fetch recommended courses
-  const { data: recommendedCourses = [] } = useQuery({
+  const { data: recommendedCourses = [] } = useQuery<any[]>({
     queryKey: ['/api/courses/recommended'],
     enabled: !!user
   });
   
   // Fetch user's weekly progress
-  const { data: weeklyProgress } = useQuery({
+  const { data: weeklyProgress } = useQuery<{
+    currentHours: number;
+    goalHours: number;
+    percentage: number;
+  }>({
     queryKey: ['/api/user/weekly-progress'],
     enabled: !!user
   });
@@ -56,14 +60,14 @@ const Dashboard = () => {
                     <h2 className="text-xl font-medium mb-4">{t('weeklyProgress')}</h2>
                     <div className="flex items-center">
                       <div className="w-20 h-20 rounded-full border-4 border-primary flex items-center justify-center mr-4">
-                        <span className="text-xl font-medium">{weeklyProgress} h</span>
+                        <span className="text-xl font-medium">{weeklyProgress.currentHours} h</span>
                       </div>
                       <div>
                         <p className="text-neutral-dark">
-                          {t('youveSpentXHoursLearningThisWeek', { hours: weeklyProgress })}
+                          {t('youveSpentXHoursLearningThisWeek', { hours: weeklyProgress.currentHours })}
                         </p>
                         <p className="text-neutral-medium text-sm mt-1">
-                          {weeklyProgress > 5
+                          {weeklyProgress.currentHours > 5
                             ? t('greatProgress')
                             : t('keepItUp')}
                         </p>
