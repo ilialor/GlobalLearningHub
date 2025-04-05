@@ -29,7 +29,7 @@ GlobalAcademy is a modern educational platform designed to provide personalized 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/globalacademy.git
+   git clone https://github.com/ilialor/globalacademy.git
    cd globalacademy
    ```
 
