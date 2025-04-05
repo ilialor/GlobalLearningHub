@@ -40,6 +40,8 @@ const UserProfile = ({ user }: UserProfileProps) => {
   
   // Get initials from display name
   const getInitials = () => {
+    if (!user.displayName) return "U"; // Default if displayName is undefined
+    
     return user.displayName
       .split(' ')
       .map(name => name[0])
@@ -64,8 +66,8 @@ const UserProfile = ({ user }: UserProfileProps) => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
           <div className="px-4 py-3 border-b border-neutral-light">
-            <p className="text-sm font-medium text-neutral-dark">{user.displayName}</p>
-            <p className="text-xs text-neutral-medium">{user.email}</p>
+            <p className="text-sm font-medium text-neutral-dark">{user.displayName || user.username}</p>
+            <p className="text-xs text-neutral-medium">{user.email || user.username}</p>
           </div>
           <ul className="py-1">
             <li>
