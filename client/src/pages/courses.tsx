@@ -8,7 +8,7 @@ import MobileNav from '@/components/layout/MobileNav';
 
 const Courses = () => {
   const { t } = useTranslation();
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('all');
   

@@ -11,7 +11,7 @@ import MobileNav from '@/components/layout/MobileNav';
 const Dashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
   
   // Fetch user's current courses
   const { data: currentCourses = [] } = useQuery<any[]>({

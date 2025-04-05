@@ -64,7 +64,7 @@ const UserProfile = ({ user }: UserProfileProps) => {
       </button>
       
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 text-black">
           <div className="px-4 py-3 border-b border-neutral-light">
             <p className="text-sm font-medium text-neutral-dark">{user.displayName || user.username}</p>
             <p className="text-xs text-neutral-medium">{user.email || user.username}</p>
@@ -72,14 +72,14 @@ const UserProfile = ({ user }: UserProfileProps) => {
           <ul className="py-1">
             <li>
               <Link href="/profile">
-                <a className="px-4 py-2 hover:bg-neutral-light cursor-pointer flex items-center">
+                <a className="px-4 py-2 hover:bg-neutral-light cursor-pointer flex items-center text-neutral-dark">
                   <span className="material-icons text-sm mr-2">person</span> {t('profile')}
                 </a>
               </Link>
             </li>
             <li>
               <Link href="/settings">
-                <a className="px-4 py-2 hover:bg-neutral-light cursor-pointer flex items-center">
+                <a className="px-4 py-2 hover:bg-neutral-light cursor-pointer flex items-center text-neutral-dark">
                   <span className="material-icons text-sm mr-2">settings</span> {t('settings')}
                 </a>
               </Link>
