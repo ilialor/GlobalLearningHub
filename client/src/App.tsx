@@ -12,6 +12,8 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import Bookmarks from "@/pages/bookmarks";
 import Settings from "@/pages/settings";
+import LearningPaths from "@/pages/learning-paths";
+import LearningPathDetail from "@/pages/learning-path-detail";
 import { AuthProvider } from "@/hooks/useAuth";
 
 function Router() {
@@ -26,6 +28,8 @@ function Router() {
       <Route path="/profile" component={Profile} />
       <Route path="/bookmarks" component={Bookmarks} />
       <Route path="/settings" component={Settings} />
+      <Route path="/learning-paths" component={LearningPaths} />
+      <Route path="/learning-paths/:id" component={LearningPathDetail} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -6,11 +6,12 @@ export const SUPPORTED_LANGUAGES = {
   es: "Español",
   fr: "Français",
   zh: "中文",
+  ru: "Русский",
 };
 
 export type LanguageCode = keyof typeof SUPPORTED_LANGUAGES;
 
-export const languageCodeSchema = z.enum(["en", "es", "fr", "zh"]);
+export const languageCodeSchema = z.enum(["en", "es", "fr", "zh", "ru"]);
 
 interface TranslationRequest {
   text: string;
@@ -139,25 +140,29 @@ class TranslationService {
         en: "Welcome to Introduction to AI",
         es: "Bienvenido a Introducción a la IA",
         fr: "Bienvenue à l'Introduction à l'IA",
-        zh: "欢迎来到人工智能介绍"
+        zh: "欢迎来到人工智能介绍",
+        ru: "Добро пожаловать в Введение в ИИ"
       },
       "Machine Learning Basics": {
         en: "Machine Learning Basics",
         es: "Fundamentos de Aprendizaje Automático",
         fr: "Bases de l'Apprentissage Automatique",
-        zh: "机器学习基础"
+        zh: "机器学习基础",
+        ru: "Основы Машинного Обучения"
       },
       "Artificial Intelligence": {
         en: "Artificial Intelligence",
         es: "Inteligencia Artificial",
         fr: "Intelligence Artificielle",
-        zh: "人工智能"
+        zh: "人工智能",
+        ru: "Искусственный Интеллект"
       },
       "Introduction to AI": {
         en: "Introduction to AI",
         es: "Introducción a la IA",
         fr: "Introduction à l'IA",
-        zh: "人工智能简介"
+        zh: "人工智能简介",
+        ru: "Введение в ИИ"
       }
     };
     
