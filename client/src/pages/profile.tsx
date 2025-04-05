@@ -70,12 +70,12 @@ const Profile = () => {
               <div className="md:flex items-center">
                 <div className="md:w-1/4 flex justify-center mb-4 md:mb-0">
                   <div className="w-24 h-24 rounded-full bg-primary-light flex items-center justify-center text-white text-3xl">
-                    {user.displayName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {user.displayName ? user.displayName.split(' ').map(n => n[0]).join('').toUpperCase() : user.username ? user.username[0].toUpperCase() : 'U'}
                   </div>
                 </div>
                 <div className="md:w-3/4">
-                  <h1 className="text-2xl font-medium mb-1">{user.displayName}</h1>
-                  <p className="text-neutral-medium mb-3">{user.email}</p>
+                  <h1 className="text-2xl font-medium mb-1">{user.displayName || user.username}</h1>
+                  <p className="text-neutral-medium mb-3">{user.email || user.username}</p>
                   <div className="flex flex-wrap gap-4">
                     <div className="bg-neutral-lightest p-3 rounded-md flex items-center">
                       <span className="material-icons text-primary mr-2">school</span>

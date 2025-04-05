@@ -10,6 +10,8 @@ import ModuleView from "@/pages/module-view";
 import Profile from "@/pages/profile";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
+import Bookmarks from "@/pages/bookmarks";
+import Settings from "@/pages/settings";
 import { AuthProvider } from "@/hooks/useAuth";
 
 function Router() {
@@ -22,6 +24,8 @@ function Router() {
       <Route path="/courses/:id" component={CourseDetail} />
       <Route path="/modules/:id" component={ModuleView} />
       <Route path="/profile" component={Profile} />
+      <Route path="/bookmarks" component={Bookmarks} />
+      <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
   );
