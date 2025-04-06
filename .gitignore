@@ -1,6 +1,11 @@
 node_modules
 dist
+.env
 .DS_Store
+.cache
+.vercel
+**/attached_assets/**
 server/public
 vite.config.ts.*
 *.tar.gz
+docs/academy_online-plvp137qm-avas-projects-1e47760b_vercel_app_logs.csv

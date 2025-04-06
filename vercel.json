@@ -1,10 +1,37 @@
 {
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": "dist/public",
   "builds": [
-    {"src": "dist/public/**", "use": "@vercel/static"},
-    {"src": "api/index.js", "use": "@vercel/node"}
+    { "src": "package.json", "use": "@vercel/node" },
+    { "src": "dist/public/**/*", "use": "@vercel/static" }
   ],
   "routes": [
-    {"src": "/api/(.*)", "dest": "/api/index.js"},
-    {"src": "/(.*)", "dest": "/dist/public/index.html"}
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "src": "/(.*\\.(js|css|svg|png|jpg|jpeg|gif|ico|json|woff|woff2|ttf|eot))", "dest": "/dist/public/$1" },
+    { "src": "/(.*)", "dest": "/dist/public/index.html" }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "public": false,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "regions": ["all"],
+  "github": {
+    "enabled": true,
+    "silent": false
+  },
+  "headers": [
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
   ]
 }
