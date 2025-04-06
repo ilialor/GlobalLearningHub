@@ -1,10 +1,32 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { log } from "./vite"; // Убедитесь, что log адаптирован для serverless (например, использует console.log)
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Разрешенные источники запросов
+const allowedOrigins = [
+  'https://your-frontend-netlify-app.netlify.app',
+  'http://localhost:5173'  // Для локальной разработки
+];
+
+// Настройка CORS
+app.use(cors({
+  origin: (origin, callback) => {
+    // Разрешить запросы без origin (например, мобильные приложения)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Запрещено CORS политикой'));
+  },
+  credentials: true
+}));
 
 // Логирование запросов
 app.use((req, res, next) => {

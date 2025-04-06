@@ -523,6 +523,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(SUPPORTED_LANGUAGES);
   });
 
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+  });
+
   // Create the HTTP server
   const httpServer = createServer(app);
   
