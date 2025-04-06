@@ -6,6 +6,49 @@
 2. **Неправильная конфигурация сборки**: Настройки сборки должны быть явно определены в `vercel.json`.
 3. **Включение ненужных файлов**: В сборку попали скриншоты и другие лишние ресурсы.
 
+## Новая проблема: Vercel не выполняет реальную сборку
+
+Анализ логов деплоя показал:
+```
+[14:50:41.050] Build Completed in /vercel/output [126ms]
+```
+
+Это указывает на то, что реальная сборка (npm run build) не выполняется. Сборка в 126мс слишком быстрая для React+Node приложения.
+
+### Решение:
+
+1. Полностью переработан `vercel.json`:
+```json
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "builds": [
+    { "src": "package.json", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/dist/public/index.html" }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
+```
+
+2. Изменен скрипт сборки в `package.json` для правильной последовательности действий:
+```json
+"build": "rm -rf dist api && vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=api && cp -r ./*.json ./api/ && rm -rf ./api/attached_assets"
+```
+
+Этот скрипт:
+- Очищает предыдущие сборки
+- Собирает frontend с помощью Vite
+- Собирает backend с помощью esbuild
+- Копирует необходимые JSON-файлы в директорию API
+- Удаляет директорию attached_assets из сборки
+
 ## Исправления
 
 ### 1. Полная переработка файла vercel.json
@@ -17,107 +60,46 @@
   "version": 2,
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "outputDirectory": "dist/public",
   "builds": [
-    { "src": "package.json", "use": "@vercel/node" },
-    { "src": "dist/public/**/*", "use": "@vercel/static" }
+    { "src": "package.json", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
-    { "src": "/(.*\\.(js|css|svg|png|jpg|jpeg|gif|ico|json|woff|woff2|ttf|eot))", "dest": "/dist/public/$1" },
+    { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/dist/public/index.html" }
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "public": false,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "regions": ["all"],
-  "github": {
-    "enabled": true,
-    "silent": false
-  },
-  "headers": [
-    {
-      "source": "/static/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
-}
-```
-
-Основные изменения:
-- Добавлен параметр `version: 2` для использования новейшей версии API Vercel
-- Добавлена конфигурация `builds` для определения билдеров
-- Улучшена конфигурация маршрутов для правильной обработки статических файлов и API
-- Добавлены настройки для GitHub-интеграции
-
-### 2. Улучшение адаптера серверных функций
-
-Файл `api/index.js` переработан для лучшей обработки ошибок:
-
-```javascript
-// Adapter for Vercel Serverless Functions
-import app from '../server/index.js';
-
-// Handler for Vercel serverless environment with enhanced error handling
-export default async function handler(req, res) {
-  try {
-    // Pass the request to the Express app
-    return app(req, res);
-  } catch (error) {
-    console.error('Serverless function error:', error);
-    
-    // Return proper error response if Express doesn't handle it
-    if (!res.headersSent) {
-      res.status(500).json({ error: 'Internal Server Error', message: error.message });
-    }
   }
 }
 ```
 
+Основные изменения:
+- Упрощена конфигурация builds для принудительного запуска скрипта в package.json
+- Добавлен обработчик статических файлов с помощью `"handle": "filesystem"`
+- Исключены лишние настройки, которые могли конфликтовать
+
+### 2. Улучшение скрипта сборки
+
+Файл `package.json` изменен для улучшения процесса сборки:
+
+```json
+"build": "rm -rf dist api && vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=api && cp -r ./*.json ./api/ && rm -rf ./api/attached_assets"
+```
+
 Это обеспечивает:
-- Правильную обработку исключений
-- Логирование ошибок сервера
-- Предотвращение "зависания" запросов
+- Очистку старых сборок
+- Правильную последовательность шагов
+- Исключение ненужных файлов из конечной сборки
 
 ### 3. Исключение ненужных файлов из деплоя
 
-В `.gitignore` добавлено:
-```
-**/attached_assets/**
-```
-
-Рекомендуется также создать файл `.vercelignore` со следующим содержимым:
-```
-attached_assets
-docs
-.git
-```
-
-### 4. Рекомендации по диагностике проблем
-
-1. **Проверка логов**:
-   - Используйте команду `vercel logs <deployment-url>` для просмотра логов
-   - Проверьте вкладку "Functions" в панели управления Vercel
-
-2. **Локальное тестирование**:
-   - Используйте `vercel dev` для локальной проверки деплоя
-
-3. **Инкрементальный деплой**:
-   - Сначала проверьте работу только статической части
-   - Затем добавьте серверную часть
+Директория `attached_assets` теперь исключается прямо во время сборки, что более надежно, чем полагаться на `.vercelignore`.
 
 ## Заключение
 
 Эти изменения должны устранить проблемы с деплоем на Vercel, обеспечивая:
-1. Правильную конфигурацию сборки
+1. Правильное выполнение всего процесса сборки
 2. Корректную маршрутизацию запросов
 3. Исключение ненужных файлов из сборки
 4. Улучшенную обработку ошибок 
